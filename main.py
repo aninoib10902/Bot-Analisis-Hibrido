@@ -34,6 +34,22 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     await update.message.reply_text(mensaje, parse_mode=ParseMode.MARKDOWN)
 
+async def top_comando(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    
+    top_tickers = [
+        ("AAPL", "Apple"), ("MSFT", "Microsoft"), ("GOOGL", "Alphabet"),
+        ("AMZN", "Amazon"), ("NVDA", "Nvidia"), ("TSLA", "Tesla"),
+        ("META", "Meta"), ("BRK.B", "Berkshire Hathaway"), ("JPM", "JPMorgan"),
+        ("V", "Visa"), ("JNJ", "Johnson & Johnson"), ("WMT", "Walmart")
+    ]
+    
+    mensaje = "🔥 **Top Acciones Populares:**\n\n"
+    for ticker, nombre in top_tickers:
+        mensaje += f"• <code>/{ticker}</code> - {nombre}\n"
+    
+    mensaje += "\n💡 *Escribe el comando del ticker (ej: /MSFT) para analizar.*"
+    await update.message.reply_text(mensaje, parse_mode=ParseMode.HTML)
+
 async def analizar_comando(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not context.args:
         await update.message.reply_text("⚠️ Indica un ticker. Ej: /analizar MSFT")
@@ -126,6 +142,7 @@ def main():
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler('start', start_command))
     app.add_handler(CommandHandler('analizar', analizar_comando))
+    app.add_handler(CommandHandler('top', top_comando))
     logger.info("Bot en línea. Escuchando peticiones...")
     init_db()
     app.run_polling()
