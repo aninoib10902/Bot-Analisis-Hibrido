@@ -24,13 +24,12 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     mensaje = (
         "🤖 **Bienvenido al Asistente de Análisis Híbrido**\n\n"
         "Este bot es una herramienta de soporte decisional diseñada para inversores. "
-        "Integramos análisis técnico (datos de mercado) y análisis de sentimiento mediante IA (FinBERT) "
-        "para ofrecerte una visión completa del activo.\n\n"
-        "📈 **¿Qué obtendrás?**\n"
-        "• Gráficas técnicas.\n"
-        "• Índice de Salud Sintética (ISS).\n"
-        "• Recomendación basada en datos.\n\n"
-        "🚀 **Para comenzar, escribe:** /analizar [TICKER]"
+        "Integramos análisis técnico y análisis de sentimiento mediante IA (FinBERT) "
+        "para ofrecerte una visión completa del mercado.\n\n"
+        "📈 **¿Cómo usarlo?**\n"
+        "• Para analizar una acción, escribe: `/analizar [TICKER]` (Ej: `/analizar MSFT`)\n"
+        "• ¿No sabes qué buscar? Escribe `/top` para ver las acciones más populares.\n\n"
+        "🚀 **¡Empieza ahora mismo a explorar el mercado!**"
     )
     await update.message.reply_text(mensaje, parse_mode=ParseMode.MARKDOWN)
 
