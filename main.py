@@ -1,11 +1,12 @@
 import os
-import html  # <--- NUEVO: Librería clave para evitar que Telegram explote
+import html  
 import logging
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import Application, CommandHandler, ContextTypes
 from db_manager import init_db, guardar_analisis
+from deep_translator import GoogleTranslator
 
 from data_fetcher import fetcher
 from sentiment_analyzer import engine 
@@ -79,10 +80,23 @@ async def analizar_comando(update: Update, context: ContextTypes.DEFAULT_TYPE):
         titulares_html = ""
         if noticias:
             for noticia in noticias[:3]:
-                # html.escape transforma cosas como "&" en "&amp;" para que Telegram no falle
-                titulo_seguro = html.escape(noticia.get('title', 'Sin título'))
+                titulo_ingles = noticia.get('title', 'Sin título')
                 link = noticia.get('link', '#')
-                titulares_html += f"• <a href='{link}'>{titulo_seguro}</a>\n"
+                
+                # Traducimos
+                try:
+                    # Forzamos la traducción a string simple
+                    titulo_espanol = str(GoogleTranslator(source='en', target='es').translate(titulo_ingles))
+                except Exception as e:
+                    logger.error(f"Error en traducción: {e}")
+                    titulo_espanol = "Traducción no disponible"
+                    
+                # Sanitizamos
+                titulo_en_seguro = html.escape(titulo_ingles)
+                titulo_es_seguro = html.escape(titulo_espanol)
+                
+                # CONSTRUCCIÓN FORZADA (Sin espacios extraños)
+                titulares_html += f"• <a href='{link}'>{titulo_en_seguro}</a>\n🇪🇸 <i>{titulo_es_seguro}</i>\n"
         else:
             titulares_html = "• No hay noticias disponibles.\n"
 
